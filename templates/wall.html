@@ -61,7 +61,11 @@
         }
 
         .message {
-            margin: 20px 0 20px 30px;
+            margin: 20px 0 0 30px;
+        }
+
+        .delete_button {
+            margin-left: 30px;
         }
 
         .comment, .post_comment {
@@ -103,6 +107,12 @@
                         <div>
                             <h3>{{ message['user'] }} - {{ message['date'] }}</h3>
                             <p class="message">{{ message['message'] }}</p>
+                            {% if message['user_id'] == session['user_id'] %}
+                                <form action="/delete_message" method="POST">
+                                    <input type="hidden" name="message_id" value={{ message['id'] }}>
+                                    <input type="submit" value="Delete message" class="delete_button post_button">
+                                </form>
+                            {% endif %}
                             {% for comment in message['comments'] %}
                                 <div class="comment">
                                     <h4>{{ comment['user'] }} - {{ comment['date'] }}</h4>

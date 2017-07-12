@@ -45,7 +45,7 @@ def login():
     if len(user) != 0:
         hashed_pw = md5.new(pw + user[0]['salt']).hexdigest()
         if user[0]['password'] == hashed_pw:
-            session['user_id'] = str(user[0]['id'])
+            session['user_id'] = user[0]['id']
             session['login_email'] = ''
             return redirect('/wall')
         else:
@@ -119,7 +119,7 @@ def display_wall():
     user = mysql.query_db(user_query, user_data)
 
     # DISPLAY ALL MESSAGES ON THE WALL
-    messages_query = "SELECT CONCAT_WS(' ', users.first_name, users.last_name) AS user, DATE_FORMAT(messages.created_at, '%M %D, %Y %l:%i %p') AS date, messages.message, messages.id FROM messages JOIN users ON messages.user_id = users.id ORDER BY messages.created_at DESC"
+    messages_query = "SELECT users.id AS user_id, CONCAT_WS(' ', users.first_name, users.last_name) AS user, DATE_FORMAT(messages.created_at, '%M %D, %Y %l:%i %p') AS date, messages.message, messages.id FROM messages JOIN users ON messages.user_id = users.id ORDER BY messages.created_at DESC"
     messages = mysql.query_db(messages_query)
 
     # DISPLAY ALL COMMENTS ON EACH MESSAGE ON THE WALL
