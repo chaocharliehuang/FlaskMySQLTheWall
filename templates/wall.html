@@ -3,13 +3,21 @@
         <title>Totally Legit Facebook</title>
     </head>
     <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
         h1, p {
             margin: 0;
             padding: 0;
         }
 
-        h2 {
+        h2, h3 {
             margin: 10px 0;
+        }
+
+        h4 {
+            margin: 5px 0;
         }
 
         .wrapper {
@@ -43,16 +51,21 @@
 
         textarea {
             width: 100%;
+            font-size: 90%;
         }
 
-        #post_message_btn {
+        .post_button {
             font-size: 150%;
             padding: 20px;
             margin-top: 10px;
         }
 
-        .message p {
-            margin-left: 20px;
+        .message {
+            margin: 20px 0 20px 30px;
+        }
+
+        .comment, .post_comment {
+            margin: 20px 0 20px 60px;
         }
     </style>
     <body>
@@ -79,18 +92,32 @@
                 <div class="post_message">
                     <h2>Post a message</h2>
                     <form action="/post_message" method="POST">
-                        <input type="hidden" value="post_message">
-                        <textarea name="message" rows="7"></textarea>
+                        <textarea name="message" rows="5"></textarea>
                         <br>
-                        <input type="submit" value="Post a message" id="post_message_btn">
+                        <input type="submit" value="Post message" class="post_button">
                     </form>
                 </div>
                 
                 <div class="messages">
                     {% for message in messages %}
-                        <div class="message">
+                        <div>
                             <h3>{{ message['user'] }} - {{ message['date'] }}</h3>
-                            <p>{{ message['message'] }}</p>
+                            <p class="message">{{ message['message'] }}</p>
+                            {% for comment in message['comments'] %}
+                                <div class="comment">
+                                    <h4>{{ comment['user'] }} - {{ comment['date'] }}</h4>
+                                    <p>{{ comment['comment'] }}</p>
+                                </div>
+                            {% endfor %}
+                            <div class="post_comment">
+                                <h4>Post a comment</h4>
+                                <form action="/post_comment" method="POST">
+                                    <input type="hidden" name="message_id" value={{ message['id'] }}>
+                                    <textarea name="comment" rows="3"></textarea>
+                                    <br>
+                                    <input type="submit" value="Post comment" class="post_button">
+                                </form>
+                            </div>
                         </div>
                     {% endfor %}
                 </div>

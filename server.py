@@ -119,8 +119,15 @@ def display_wall():
     user = mysql.query_db(user_query, user_data)
 
     # DISPLAY ALL MESSAGES ON THE WALL
-    messages_query = "SELECT CONCAT_WS(' ', users.first_name, users.last_name) AS user, DATE_FORMAT(messages.created_at, '%M %D %Y') AS date, messages.message FROM messages JOIN users ON messages.user_id = users.id ORDER BY messages.created_at DESC"
+    messages_query = "SELECT CONCAT_WS(' ', users.first_name, users.last_name) AS user, DATE_FORMAT(messages.created_at, '%M %D, %Y %l:%i %p') AS date, messages.message, messages.id FROM messages JOIN users ON messages.user_id = users.id ORDER BY messages.created_at DESC"
     messages = mysql.query_db(messages_query)
+
+    # DISPLAY ALL COMMENTS ON EACH MESSAGE ON THE WALL
+    for message in messages:
+        comments_data = {'message_id': message['id']}
+        comments_query = "SELECT CONCAT_WS(' ', users.first_name, users.last_name) AS user, DATE_FORMAT(comments.created_at, '%M %D, %Y %l:%i %p') AS date, comments.comment FROM messages JOIN comments on messages.id = comments.message_id JOIN users ON comments.user_id = users.id WHERE messages.id = :message_id ORDER BY comments.created_at ASC"
+        message['comments'] = mysql.query_db(comments_query, comments_data)
+
     return render_template('wall.html', first_name=user[0]['first_name'], messages=messages)
 
 @app.route('/post_message', methods=['POST'])
@@ -134,6 +141,22 @@ def post_message():
         'message': message
     }
     insert_query = "INSERT INTO messages (user_id, message, created_at, updated_at) VALUES (:user_id, :message, NOW(), NOW())"
+    mysql.query_db(insert_query, query_data)
+    return redirect('/wall')
+
+@app.route('/post_comment', methods=['POST'])
+def post_comment():
+    message_id = int(request.form['message_id'])
+    comment = request.form['comment']
+    if len(comment) < 1:
+        flash('Comment cannot be empty!')
+        return redirect('/wall')
+    query_data = {
+        'message_id': message_id,
+        'user_id': session['user_id'],
+        'comment': comment
+    }
+    insert_query = "INSERT INTO comments (message_id, user_id, comment, created_at, updated_at) VALUES (:message_id, :user_id, :comment, NOW(), NOW())"
     mysql.query_db(insert_query, query_data)
     return redirect('/wall')
 
