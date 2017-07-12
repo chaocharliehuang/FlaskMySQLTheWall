@@ -50,6 +50,10 @@
             padding: 20px;
             margin-top: 10px;
         }
+
+        .message p {
+            margin-left: 20px;
+        }
     </style>
     <body>
         <div class="wrapper">
@@ -66,7 +70,7 @@
             {% with messages = get_flashed_messages() %}
                 {% if messages %}
                 {% for message in messages %}
-                    <p style="color: green;">{{ message }}</p>
+                    <p style="color: red;">{{ message }}</p>
                 {% endfor %}
                 {% endif %}
             {% endwith %}
@@ -74,16 +78,21 @@
             <div class="wall">
                 <div class="post_message">
                     <h2>Post a message</h2>
-                    <form action="" method="POST">
+                    <form action="/post_message" method="POST">
                         <input type="hidden" value="post_message">
-                        <textarea rows="7"></textarea>
+                        <textarea name="message" rows="7"></textarea>
                         <br>
                         <input type="submit" value="Post a message" id="post_message_btn">
                     </form>
                 </div>
                 
                 <div class="messages">
-                    messages
+                    {% for message in messages %}
+                        <div class="message">
+                            <h3>{{ message['user'] }} - {{ message['date'] }}</h3>
+                            <p>{{ message['message'] }}</p>
+                        </div>
+                    {% endfor %}
                 </div>
             </div> <!-- end wall div -->
 

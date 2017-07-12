@@ -106,17 +106,36 @@ def register():
     user_id = mysql.query_db(insert_query, query_data)
 
     session['user_id'] = user_id
-    flash('Registration successful! Welcome to Facebook!')
     return redirect('/wall')
 
 @app.route('/wall')
 def display_wall():
     if session['user_id'] is None:
         return render_template('404.html')
-    data = {'id': session['user_id']}
-    query = "SELECT * FROM users WHERE id = :id LIMIT 1"
-    user = mysql.query_db(query, data)
-    return render_template('wall.html', first_name=user[0]['first_name'])
+
+    # DISPLAY LOGGED IN USER'S FIRST NAME IN HEADER
+    user_data = {'id': session['user_id']}
+    user_query = "SELECT * FROM users WHERE id = :id LIMIT 1"
+    user = mysql.query_db(user_query, user_data)
+
+    # DISPLAY ALL MESSAGES ON THE WALL
+    messages_query = "SELECT CONCAT_WS(' ', users.first_name, users.last_name) AS user, DATE_FORMAT(messages.created_at, '%M %D %Y') AS date, messages.message FROM messages JOIN users ON messages.user_id = users.id ORDER BY messages.created_at DESC"
+    messages = mysql.query_db(messages_query)
+    return render_template('wall.html', first_name=user[0]['first_name'], messages=messages)
+
+@app.route('/post_message', methods=['POST'])
+def post_message():
+    message = request.form['message']
+    if len(message) < 1:
+        flash('Message cannot be empty!')
+        return redirect('/wall')
+    query_data = {
+        'user_id': session['user_id'],
+        'message': message
+    }
+    insert_query = "INSERT INTO messages (user_id, message, created_at, updated_at) VALUES (:user_id, :message, NOW(), NOW())"
+    mysql.query_db(insert_query, query_data)
+    return redirect('/wall')
 
 @app.route('/logoff')
 def logoff():
