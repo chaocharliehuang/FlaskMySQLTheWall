@@ -8,6 +8,10 @@
             padding: 0;
         }
 
+        h2 {
+            margin: 10px 0;
+        }
+
         .wrapper {
             width: 80%;
             margin: 0 auto;
@@ -26,6 +30,25 @@
 
         .welcome_logoff p {
             margin-right: 40px;
+        }
+
+        .wall {
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        .post_message {
+            margin-bottom: 20px;
+        }
+
+        textarea {
+            width: 100%;
+        }
+
+        #post_message_btn {
+            font-size: 150%;
+            padding: 20px;
+            margin-top: 10px;
         }
     </style>
     <body>
@@ -49,8 +72,21 @@
             {% endwith %}
 
             <div class="wall">
+                <div class="post_message">
+                    <h2>Post a message</h2>
+                    <form action="" method="POST">
+                        <input type="hidden" value="post_message">
+                        <textarea rows="7"></textarea>
+                        <br>
+                        <input type="submit" value="Post a message" id="post_message_btn">
+                    </form>
+                </div>
                 
-            </div>
+                <div class="messages">
+                    messages
+                </div>
+            </div> <!-- end wall div -->
+
         </div> <!-- end wrapper div -->
     </body>
 </html>
