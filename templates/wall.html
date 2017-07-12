@@ -1,0 +1,56 @@
+<html>
+    <head>
+        <title>Totally Legit Facebook</title>
+    </head>
+    <style>
+        h1, p {
+            margin: 0;
+            padding: 0;
+        }
+
+        .wrapper {
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid black;
+        }
+
+        .welcome_logoff {
+            display: flex;
+            align-self: center;
+        }
+
+        .welcome_logoff p {
+            margin-right: 40px;
+        }
+    </style>
+    <body>
+        <div class="wrapper">
+            <div class="header">
+                <div class="logo">
+                    <h1>Totally Legit Facebook</h1>
+                </div>
+                <div class="welcome_logoff">
+                    <p>Welcome {{ first_name }}</p>
+                    <a href="/logoff">log off</a>
+                </div>
+            </div> <!-- end header div -->
+
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                {% for message in messages %}
+                    <p style="color: green;">{{ message }}</p>
+                {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="wall">
+                
+            </div>
+        </div> <!-- end wrapper div -->
+    </body>
+</html>

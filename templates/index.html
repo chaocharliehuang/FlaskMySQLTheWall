@@ -1,0 +1,90 @@
+<html>
+    <head>
+        <title>Totally Legit Facebook</title>
+    </head>
+    <style>
+        h1, p {
+            margin: 5px 0;
+            padding: 0;
+        }
+
+        .wrapper {
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid black;
+        }
+
+        .forms {
+            display: flex;
+        }
+
+        .form_register {
+            margin-left: 100px;
+        }
+
+        .forms h3 {
+            margin: 10px 0;
+        }
+    </style>
+    <body>
+        <div class="wrapper">
+            <div class="header">
+                <div class="logo">
+                    <h1>Totally Legit Facebook</h1>
+                </div>
+            </div> <!-- end header div -->
+
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                {% for message in messages %}
+                    <p style="color: red;">{{ message }}</p>
+                {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="forms">
+                <div class="form_login">
+                    <h3>Login</h3>
+                    <form action="/login" method="POST">
+                        <label for="email">Email: </label>
+                        <input type="text" name="email" id="email" value={{ session['login_email'] }}>
+                        <br><br>
+                        <label for="pw">Password: </label>
+                        <input type="password" name="pw" id="pw">
+                        <br><br>
+                        <input type="submit" value="Login">
+                    </form>
+                </div> <!-- end login form -->
+
+                <div class="form_register">
+                    <h3>Register</h3>
+                    <form action="/register" method="POST">
+                        <label for="first_name">First Name: </label>
+                        <input type="text" name="first_name" id="first_name" value={{ session['first_name'] }}>
+                        <br><br>
+                        <label for="last_name">Last Name: </label>
+                        <input type="text" name="last_name" id="last_name" value={{ session['last_name'] }}>
+                        <br><br>
+                        <label for="email">Email: </label>
+                        <input type="text" name="email" id="email" value={{ session['email'] }}>
+                        <br><br>
+                        <label for="pw">Password: </label>
+                        <input type="password" name="pw" id="pw">
+                        <br><br>
+                        <label for="pw_confirm">Confirm Password: </label>
+                        <input type="password" name="pw_confirm" id="pw_confirm">
+                        <br><br>
+                        <input type="submit" value="Register">
+                    </form>
+                </div> <!--end register form -->
+
+            </div> <!-- end forms div -->
+
+        </div> <!-- end wrapper div -->
+    </body>
+</html>
