@@ -144,6 +144,13 @@ def post_message():
     mysql.query_db(insert_query, query_data)
     return redirect('/wall')
 
+@app.route('/delete_message', methods=['POST'])
+def delete_message():
+    query_data = {'message_id': request.form['message_id']}
+    delete_query = "DELETE FROM messages WHERE messages.id = :message_id"
+    mysql.query_db(delete_query, query_data)
+    return redirect('/wall')
+
 @app.route('/post_comment', methods=['POST'])
 def post_comment():
     message_id = int(request.form['message_id'])
